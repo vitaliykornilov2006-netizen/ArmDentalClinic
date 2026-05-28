@@ -1,0 +1,65 @@
+<Window x:Class="ARMDental.Views.DoctorEditForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Врач"
+        Height="700" 
+        Width="450"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Background="#F5F7FA">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <Border Grid.Row="0" Background="#c2185b" Padding="15" Margin="-20,-20,-20,15">
+            <TextBlock x:Name="txtTitle" Text="Новый врач"
+                       FontSize="18" FontWeight="Bold" Foreground="White"/>
+        </Border>
+
+        <!-- Форма -->
+        <StackPanel Grid.Row="1">
+            <TextBlock Text="Фамилия *" FontWeight="Bold" Margin="0,0,0,5"/>
+            <TextBox x:Name="txtLastName" Height="35" Margin="0,0,0,15" Padding="10,5"/>
+
+            <TextBlock Text="Имя *" FontWeight="Bold" Margin="0,0,0,5"/>
+            <TextBox x:Name="txtFirstName" Height="35" Margin="0,0,0,15" Padding="10,5"/>
+
+            <TextBlock Text="Отчество" FontWeight="Bold" Margin="0,0,0,5"/>
+            <TextBox x:Name="txtMiddleName" Height="35" Margin="0,0,0,15" Padding="10,5"/>
+
+            <TextBlock Text="Специализация *" FontWeight="Bold" Margin="0,0,0,5"/>
+            <TextBox x:Name="txtSpecialization" Height="35" Margin="0,0,0,15" Padding="10,5"/>
+
+            <TextBlock Text="Телефон" FontWeight="Bold" Margin="0,0,0,5"/>
+            <TextBox x:Name="txtPhone" Height="35" Margin="0,0,0,15" Padding="10,5"/>
+
+            <TextBlock Text="Дата трудоустройства" FontWeight="Bold" Margin="0,0,0,5"/>
+            <DatePicker x:Name="dpEmploymentDate" Height="35" Margin="0,0,0,15"/>
+            <TextBlock Text="Пользователь *" FontWeight="Bold" Margin="0,0,0,5"/>
+
+            <ComboBox x:Name="cbUsers"
+          Height="35"
+          Margin="0,0,0,12"
+          DisplayMemberPath="Login"
+          SelectedValuePath="Id"/>
+        </StackPanel>
+
+        <!-- Кнопки -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button x:Name="btnSave" Content="💾 Сохранить" 
+                    Width="120" Height="35" 
+                    Background="#27AE60" Foreground="White"
+                    BorderThickness="0" Margin="0,0,10,0"
+                    Click="btnSave_Click"/>
+            <Button x:Name="btnCancel" Content="Отмена" 
+                    Width="100" Height="35" 
+                    Background="#95A5A6" Foreground="White"
+                    BorderThickness="0"
+                    Click="btnCancel_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

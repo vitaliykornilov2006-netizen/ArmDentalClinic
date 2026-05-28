@@ -1,0 +1,162 @@
+<Window x:Class="ARMDental.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Настройки системы" 
+        Height="500" 
+        Width="600"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResize"
+        Background="#F5F7FA">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+
+        <!-- ================= HEADER ================= -->
+        <Border Grid.Row="0" Background="#c2185b">
+            <TextBlock Text="⚙️ Настройки системы" 
+                       FontSize="18" 
+                       FontWeight="Bold"
+                       Foreground="White"
+                       VerticalAlignment="Center"
+                       Margin="20,0"/>
+        </Border>
+
+        <!-- ================= CONTENT ================= -->
+        <Border Grid.Row="1" Margin="15" Background="White" CornerRadius="5">
+            <TabControl Background="White" BorderThickness="0">
+
+                <!-- 🎨 Оформление -->
+                <TabItem Header="🎨 Оформление">
+                    <StackPanel Margin="15">
+
+                        <TextBlock Text="Тема оформления" 
+                                   FontWeight="Bold" 
+                                   Margin="0,0,0,10"/>
+
+                        <ComboBox x:Name="cmbTheme" Width="200" Height="30" Margin="0,0,0,20">
+                            <ComboBoxItem Content="Светлая" IsSelected="True"/>
+                            <ComboBoxItem Content="Тёмная"/>
+                        </ComboBox>
+
+                        <Separator Margin="0,10,0,10"/>
+
+                        <CheckBox x:Name="chkRunOnStartup" Content="Запускать при старте Windows" Margin="0,10"/>
+
+                        <CheckBox x:Name="chkShowNotifications" Content="Показывать уведомления" Margin="0,5" IsChecked="True"/>
+
+                    </StackPanel>
+                </TabItem>
+
+                <!-- 💾 БД -->
+                <TabItem Header="💾 База данных">
+                    <StackPanel Margin="15">
+
+                        <TextBlock Text="Строка подключения" 
+                                   FontWeight="Bold" 
+                                   Margin="0,0,0,10"/>
+
+                        <TextBox x:Name="txtConnectionString" 
+                                 Height="30"
+                                 IsReadOnly="True"
+                                 Background="#F0F0F0"
+                                 Margin="0,0,0,10"
+                                 Text="Host=localhost;Port=5432;Database=ARM_Dental_new;Username=postgres"/>
+
+                        <Button x:Name="btnTestConnection" 
+                                Content="Проверить подключение" 
+                                Click="btnTestConnection_Click"
+                                Width="180"
+                                Height="30"
+                                Margin="0,10,0,0"
+                                Background="#c2185b"
+                                Foreground="White"
+                                BorderThickness="0"/>
+
+                        <TextBlock x:Name="txtConnectionStatus" 
+                                   Text="—"
+                                   Margin="0,10,0,0"
+                                   FontWeight="Bold"/>
+
+                        <Separator Margin="0,15,0,15"/>
+
+                        <Button x:Name="btnBackup" 
+                                Content="Резервное копирование" 
+                                Click="btnBackup_Click"
+                                Width="180"
+                                Height="30"
+                                Background="#7f3667"
+                                Foreground="White"
+                                BorderThickness="0"/>
+
+                    </StackPanel>
+                </TabItem>
+
+                <!-- ℹ️ О программе -->
+                <TabItem Header="ℹ️ О программе">
+                    <StackPanel Margin="15" VerticalAlignment="Center">
+
+                        <TextBlock Text="АРМ Система - Стоматологическая клиника" 
+                                   FontSize="18" 
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Версия 1.0.0" 
+                                   HorizontalAlignment="Center"
+                                   Foreground="#7F8C8D"
+                                   Margin="0,0,0,20"/>
+
+                        <TextBlock Text="Разработано для учебных целей" 
+                                   HorizontalAlignment="Center"
+                                   FontSize="12"
+                                   Foreground="#95A5A6"/>
+
+                        <TextBlock Text="© 2026" 
+                                   HorizontalAlignment="Center"
+                                   FontSize="12"
+                                   Foreground="#95A5A6"
+                                   Margin="0,10,0,0"/>
+
+                    </StackPanel>
+                </TabItem>
+
+            </TabControl>
+        </Border>
+
+        <!-- ================= FOOTER ================= -->
+        <Border Grid.Row="2" Background="#7f3667">
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="1" 
+                        x:Name="btnApply"
+                        Content="Применить" 
+                        Click="btnApply_Click"
+                        Background="#27AE60"
+                        Foreground="White"
+                        Width="100"
+                        Height="30"
+                        Margin="0,0,10,0"
+                        BorderThickness="0"/>
+
+                <Button Grid.Column="2" 
+                        x:Name="btnCancel"
+                        Content="Закрыть" 
+                        Click="btnCancel_Click"
+                        Background="#95A5A6"
+                        Foreground="White"
+                        Width="100"
+                        Height="30"
+                        BorderThickness="0"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
