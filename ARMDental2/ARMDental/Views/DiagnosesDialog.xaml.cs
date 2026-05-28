@@ -105,5 +105,35 @@ namespace ARMDental.Views
         {
             LoadDiagnoses();
         }
+        private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                if (txtSearch == null)
+                    return;
+
+                using var db = new AppDbContext();
+
+                string search = txtSearch.Text.Trim().ToLower();
+
+                var diagnoses = db.Diagnoses
+                    .Where(d =>
+                        d.Name.ToLower().Contains(search) ||
+                        d.Code.ToLower().Contains(search))
+                    .OrderBy(d => d.Code)
+                    .ToList();
+
+                _diagnoses.Clear();
+
+                foreach (var diagnosis in diagnoses)
+                    _diagnoses.Add(diagnosis);
+
+                txtCount.Text = $"Найдено диагнозов: {_diagnoses.Count}";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка поиска: {ex.Message}");
+            }
+        }
     }
 }

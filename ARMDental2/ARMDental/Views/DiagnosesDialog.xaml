@@ -36,9 +36,45 @@
         </Border>
 
         <Border Grid.Row="1" Background="#F5F7FA" Padding="20">
-            <DataGrid x:Name="dgDiagnoses" Background="White" RowHeight="52"
-                      HeadersVisibility="Column" GridLinesVisibility="None"
-                      BorderBrush="#E5E7EB" AutoGenerateColumns="False" IsReadOnly="True"/>
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Поиск -->
+                <Border Background="White"
+                CornerRadius="8"
+                Padding="15"
+                Margin="0,0,0,15"
+                BorderBrush="#E5E7EB"
+                BorderThickness="1">
+
+                    <StackPanel Orientation="Horizontal">
+
+                        <TextBox x:Name="txtSearch"
+                         Width="320"
+                         Height="36"
+                         Padding="12,8"
+                         Margin="0,0,15,0"
+                         BorderBrush="#D1D5DB"
+                         VerticalContentAlignment="Center"
+                         TextChanged="txtSearch_TextChanged"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Таблица -->
+                <DataGrid x:Name="dgDiagnoses"
+                  Grid.Row="1"
+                  Background="White"
+                  RowHeight="52"
+                  HeadersVisibility="Column"
+                  GridLinesVisibility="None"
+                  BorderBrush="#E5E7EB"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"/>
+            </Grid>
         </Border>
 
         <Border Grid.Row="2" Background="#7f3667" Height="34">

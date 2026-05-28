@@ -112,5 +112,34 @@ namespace ARMDental.Views
         {
             LoadServices();
         }
+        private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                if (txtSearch == null)
+                    return;
+
+                using var db = new AppDbContext();
+
+                string search = txtSearch.Text.Trim().ToLower();
+
+                var services = db.Services
+                    .Where(s =>
+                        s.Name.ToLower().Contains(search))
+                    .OrderBy(s => s.Name)
+                    .ToList();
+
+                _services.Clear();
+
+                foreach (var service in services)
+                    _services.Add(service);
+
+                txtCount.Text = $"Найдено услуг: {_services.Count}";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка поиска: {ex.Message}");
+            }
+        }
     }
 }

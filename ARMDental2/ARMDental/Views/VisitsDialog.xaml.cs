@@ -15,7 +15,12 @@ namespace ARMDental.Views
         public VisitsDialog()
         {
             InitializeComponent();
-            LoadVisits();
+
+            Loaded += (_, __) =>
+            {
+                _isLoaded = true;
+                LoadVisits();
+            };
         }
 
         private void LoadVisits()
@@ -83,7 +88,7 @@ namespace ARMDental.Views
                 // Подсчёт приёмов на сегодня
                 var today = DateTime.Today;
                 var todayCount = appointments.Count(a => a.AppointmentDate.Date == today);
-                txtCount.Text = $"Приёмов сегодня: {todayCount}  •  Всего: {_visits.Count}";
+                SetCountText(_visits.Count);
             }
             catch (Exception ex)
             {
@@ -159,6 +164,144 @@ namespace ARMDental.Views
         private void btnRefresh_Click(object sender, RoutedEventArgs e)
         {
             LoadVisits();
+        }
+
+        private bool _isLoaded;
+        private void Filters_Changed(object sender, EventArgs e)
+        {
+            if (!_isLoaded) return;
+            ApplyFilters();
+        }
+
+        private void ApplyFilters()
+        {
+            try
+            {
+                using var db = new AppDbContext();
+
+                string patientSearch = txtPatientSearch.Text.Trim().ToLower();
+                string doctorSearch = txtDoctorSearch.Text.Trim().ToLower();
+                string serviceSearch = txtServiceSearch.Text.Trim().ToLower();
+                string diagnosisSearch = txtDiagnosisSearch.Text.Trim().ToLower();
+
+                string selectedStatus =
+                    (cmbStatusFilter.SelectedItem as ComboBoxItem)?.Content?.ToString()
+                    ?? "Все статусы";
+
+                DateTime? selectedDate = dpDateFilter.SelectedDate;
+
+
+                var query = db.Appointments
+                    .Include(a => a.Patient)
+                    .Include(a => a.Doctor)
+                    .Include(a => a.AppointmentServices)
+                        .ThenInclude(x => x.Service)
+                    .Include(a => a.AppointmentDiagnoses)
+                        .ThenInclude(x => x.Diagnosis)
+                    .AsQueryable();
+
+                // Пациент
+                if (!string.IsNullOrWhiteSpace(patientSearch))
+                {
+                    query = query.Where(a =>
+                        (a.Patient.LastName + " " + a.Patient.FirstName)
+                            .ToLower()
+                            .Contains(patientSearch));
+                }
+
+                // Врач
+                if (!string.IsNullOrWhiteSpace(doctorSearch))
+                {
+                    query = query.Where(a =>
+                        (a.Doctor.LastName + " " + a.Doctor.FirstName)
+                            .ToLower()
+                            .Contains(doctorSearch));
+                }
+
+                // Услуга
+                if (!string.IsNullOrWhiteSpace(serviceSearch))
+                {
+                    query = query.Where(a =>
+                        a.AppointmentServices.Any(s =>
+                            s.Service.Name.ToLower().Contains(serviceSearch)));
+                }
+
+                // Диагноз
+                if (!string.IsNullOrWhiteSpace(diagnosisSearch))
+                {
+                    query = query.Where(a =>
+                        a.AppointmentDiagnoses.Any(d =>
+                            d.Diagnosis.Name.ToLower().Contains(diagnosisSearch)));
+                }
+
+                // Статус
+                if (selectedStatus != "Все статусы")
+                {
+                    query = query.Where(a => a.Status == selectedStatus);
+                }
+
+                // Дата
+                if (dpDateFilter.SelectedDate.HasValue)
+                {
+                    var start = DateTime.SpecifyKind(
+                        dpDateFilter.SelectedDate.Value.Date,
+                        DateTimeKind.Utc);
+
+                    var end = start.AddDays(1);
+
+                    query = query.Where(a =>
+                        a.AppointmentDate >= start &&
+                        a.AppointmentDate < end);
+                }
+
+                var appointments = query
+                    .OrderByDescending(a => a.AppointmentDate)
+                    .ToList();
+
+                _visits.Clear();
+
+                foreach (var appt in appointments)
+                {
+                    _visits.Add(new AppointmentDisplay
+                    {
+                        Id = appt.Id,
+                        PatientName = $"{appt.Patient?.LastName} {appt.Patient?.FirstName}",
+                        DoctorName = $"{appt.Doctor?.LastName} {appt.Doctor?.FirstName}",
+                        AppointmentDate = appt.AppointmentDate,
+                        Status = appt.Status,
+                        Notes = appt.Notes,
+                        Services = string.Join(", ",
+                            appt.AppointmentServices.Select(s => s.Service.Name)),
+                        Diagnoses = string.Join(", ",
+                            appt.AppointmentDiagnoses.Select(d => d.Diagnosis.Name))
+                    });
+                }
+
+                txtCount.Text = $"Найдено приёмов: {_visits.Count}";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка фильтрации: {ex.Message}");
+            }
+        }
+
+        private void btnClearFilters_Click(object sender, RoutedEventArgs e)
+        {
+            txtPatientSearch.Clear();
+            txtDoctorSearch.Clear();
+            txtServiceSearch.Clear();
+            txtDiagnosisSearch.Clear();
+
+            dpDateFilter.SelectedDate = null;
+            cmbStatusFilter.SelectedIndex = 0;
+
+            LoadVisits();
+        }
+        private void SetCountText(int count)
+        {
+            if (txtCount == null) return;
+
+            txtCount.Text = $"Найдено приёмов: {count}";
         }
     }
 

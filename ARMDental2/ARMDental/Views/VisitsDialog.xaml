@@ -36,9 +36,111 @@
         </Border>
 
         <Border Grid.Row="1" Background="#F5F7FA" Padding="20">
-            <DataGrid x:Name="dgVisits" Background="White" RowHeight="52"
-                      HeadersVisibility="Column" GridLinesVisibility="None"
-                      BorderBrush="#E5E7EB" AutoGenerateColumns="False" IsReadOnly="True"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Фильтры -->
+                <Border Background="White"
+                CornerRadius="8"
+                Padding="15"
+                Margin="0,0,0,15"
+                BorderBrush="#E5E7EB"
+                BorderThickness="1">
+
+                    <StackPanel>
+
+                        <!-- Первая строка -->
+                        <WrapPanel Margin="0,0,0,10">
+
+                            <StackPanel Margin="0,0,15,0">
+                                <TextBlock Text="Пациент" Margin="0,0,0,4"/>
+                                <TextBox x:Name="txtPatientSearch"
+                                 Width="180"
+                                 Height="35"
+                                 Padding="10,5"
+                                 TextChanged="Filters_Changed"/>
+                            </StackPanel>
+
+                            <StackPanel Margin="0,0,15,0">
+                                <TextBlock Text="Врач" Margin="0,0,0,4"/>
+                                <TextBox x:Name="txtDoctorSearch"
+                                 Width="180"
+                                 Height="35"
+                                 Padding="10,5"
+                                 TextChanged="Filters_Changed"/>
+                            </StackPanel>
+
+                            <StackPanel Margin="0,0,15,0">
+                                <TextBlock Text="Услуга" Margin="0,0,0,4"/>
+                                <TextBox x:Name="txtServiceSearch"
+                                 Width="180"
+                                 Height="35"
+                                 Padding="10,5"
+                                 TextChanged="Filters_Changed"/>
+                            </StackPanel>
+
+                            <StackPanel>
+                                <TextBlock Text="Диагноз" Margin="0,0,0,4"/>
+                                <TextBox x:Name="txtDiagnosisSearch"
+                                 Width="180"
+                                 Height="35"
+                                 Padding="10,5"
+                                 TextChanged="Filters_Changed"/>
+                            </StackPanel>
+
+                        </WrapPanel>
+
+                        <!-- Вторая строка -->
+                        <WrapPanel>
+
+                            <StackPanel Margin="0,0,15,0">
+                                <TextBlock Text="Дата" Margin="0,0,0,4"/>
+                                <DatePicker x:Name="dpDateFilter" 
+                                            SelectedDateChanged="Filters_Changed"
+                                            Width="160"/>
+                            </StackPanel>
+
+                            <StackPanel Margin="0,0,15,0">
+                                <TextBlock Text="Статус" Margin="0,0,0,4"/>
+                                <ComboBox x:Name="cmbStatusFilter"
+                                  Width="200"
+                                  Height="35"
+                                  SelectionChanged="Filters_Changed">
+                                    <ComboBoxItem Content="Все статусы" IsSelected="True"/>
+                                    <ComboBoxItem Content="Запланирована"/>
+                                    <ComboBoxItem Content="В процессе"/>
+                                    <ComboBoxItem Content="Завершена"/>
+                                    <ComboBoxItem Content="Отменена"/>
+                                </ComboBox>
+                            </StackPanel>
+
+                            <Button Content="Сбросить"
+                            Width="120"
+                            Height="35"
+                            Margin="10,22,0,0"
+                            Background="#95A5A6"
+                            Foreground="White"
+                            Click="btnClearFilters_Click"/>
+
+                        </WrapPanel>
+
+                    </StackPanel>
+                </Border>
+
+                <!-- Таблица -->
+                <DataGrid x:Name="dgVisits"
+                  Grid.Row="1"
+                  Background="White"
+                  RowHeight="52"
+                  HeadersVisibility="Column"
+                  GridLinesVisibility="None"
+                  BorderBrush="#E5E7EB"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"/>
+            </Grid>
         </Border>
 
         <Border Grid.Row="2" Background="#7f3667" Height="34">

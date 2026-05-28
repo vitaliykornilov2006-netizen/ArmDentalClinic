@@ -160,5 +160,10 @@ namespace ARMDental.Views
                 MessageBox.Show($"Ошибка поиска: {ex.Message}");
             }
         }
+
+        private void dgPatients_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

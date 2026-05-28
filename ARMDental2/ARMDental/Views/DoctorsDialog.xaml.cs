@@ -28,6 +28,7 @@ namespace ARMDental.Views
             }
 
             LoadDoctors();
+            LoadSpecializations();
         }
 
         private void LoadDoctors()
@@ -129,19 +130,50 @@ namespace ARMDental.Views
         {
             LoadDoctors();
         }
-        private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
+        private void FilterDoctors(object sender, EventArgs e)
         {
+            if (txtSearch == null || cmbSpecialization == null || dpEmploymentDate == null)
+                return;
             try
             {
                 using var db = new AppDbContext();
 
                 string search = txtSearch.Text.Trim().ToLower();
 
-                var doctors = db.Doctors
-                    .Where(d =>
+                string specialization =
+                    (cmbSpecialization.SelectedItem as ComboBoxItem)?
+                    .Content?.ToString() ?? "Все специализации";
+
+                DateTime? employmentDate = dpEmploymentDate?.SelectedDate;
+
+                var query = db.Doctors.AsQueryable();
+
+                // Поиск по ФИО
+                if (!string.IsNullOrWhiteSpace(search))
+                {
+                    query = query.Where(d =>
                         d.LastName.ToLower().Contains(search) ||
                         d.FirstName.ToLower().Contains(search) ||
-                        (d.MiddleName != null && d.MiddleName.ToLower().Contains(search)))
+                        (d.MiddleName != null &&
+                         d.MiddleName.ToLower().Contains(search)));
+                }
+
+                // Фильтр по специализации
+                if (specialization != "Все специализации")
+                {
+                    query = query.Where(d =>
+                        d.Specialization == specialization);
+                }
+
+                // Фильтр по дате трудоустройства
+                if (employmentDate.HasValue)
+                {
+                    query = query.Where(d =>
+                        d.EmploymentDate.Date ==
+                        employmentDate.Value.Date);
+                }
+
+                var doctors = query
                     .OrderBy(d => d.LastName)
                     .ToList();
 
@@ -154,8 +186,43 @@ namespace ARMDental.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка поиска: {ex.Message}");
+                MessageBox.Show($"Ошибка фильтрации: {ex.Message}");
             }
+        }
+        private void LoadSpecializations()
+        {
+            try
+            {
+                using var db = new AppDbContext();
+
+                var specializations = db.Doctors
+                    .Select(d => d.Specialization)
+                    .Distinct()
+                    .OrderBy(s => s)
+                    .ToList();
+
+                foreach (var specialization in specializations)
+                {
+                    cmbSpecialization.Items.Add(
+                        new ComboBoxItem { Content = specialization });
+                }
+
+                cmbSpecialization.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки специализаций: {ex.Message}");
+            }
+        }
+        private void btnResetFilters_Click(object sender, RoutedEventArgs e)
+        {
+            txtSearch.Clear();
+
+            cmbSpecialization.SelectedIndex = 0;
+
+            dpEmploymentDate.SelectedDate = null;
+
+            LoadDoctors();
         }
     }
 }

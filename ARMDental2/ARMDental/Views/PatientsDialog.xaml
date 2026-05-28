@@ -33,7 +33,7 @@
                 </StackPanel>
 
                 <!-- Кнопки действий -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button x:Name="btnAddPatient" Background="#c2185b" Foreground="White" Padding="18,9" Margin="0,0,8,0" Click="btnAddPatient_Click">
                         ➕ Новый пациент
                     </Button>
@@ -43,14 +43,7 @@
                     <Button x:Name="btnDelete" Background="#e74c3c" Foreground="White" Padding="18,9" Margin="0,0,8,0" Click="btnDelete_Click">
                         🗑 Удалить
                     </Button>
-                    <Button x:Name="btnRefresh" 
-                            Background="White" 
-                            BorderBrush="#BDC3C7"
-                            BorderThickness="1"
-                            Padding="16,9"
-                            Cursor="Hand"
-                            FontSize="14"
-                            Click="btnRefresh_Click">
+                    <Button x:Name="btnRefresh" Background="White" BorderBrush="#BDC3C7" BorderThickness="1" Padding="16,9" Click="btnRefresh_Click">
                         🔄 Обновить
                     </Button>
                 </StackPanel>
@@ -66,29 +59,23 @@
                 </Grid.RowDefinitions>
 
                 <!-- Панель фильтров -->
-                <Border Grid.Row="0" Background="White" CornerRadius="8" 
-                        Padding="18" Margin="0,0,0,18"
-                        BorderThickness="1" BorderBrush="#E5E7EB">
+                <Border Background="White" 
+                        CornerRadius="8" 
+                        Padding="15"
+                        Margin="0,0,0,15"
+                        BorderThickness="1" 
+                        BorderBrush="#E5E7EB">
 
-                    <WrapPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal">
                         <TextBox x:Name="txtSearch" 
-                                 Width="280"
+                                 Width="260"
                                  Height="36"
                                  Margin="0,0,15,0"
                                  Padding="12,8"
-                                 FontSize="14"
                                  BorderBrush="#D1D5DB"
-                                 BorderThickness="1"
-                                 Background="White"
                                  VerticalContentAlignment="Center"
                                  TextChanged="txtSearch_TextChanged"/>
-
-                        <Button Content="🔍 Найти" 
-                                Width="110" Height="36"
-                                Background="#34495E"
-                                Foreground="White"
-                                BorderThickness="0"/>
-                    </WrapPanel>
+                    </StackPanel>
                 </Border>
 
                 <!-- Таблица пациентов -->
@@ -99,9 +86,8 @@
                           HeadersVisibility="Column"
                           GridLinesVisibility="None"
                           BorderBrush="#E5E7EB"
-                          BorderThickness="1"
                           AutoGenerateColumns="False"
-                          IsReadOnly="True" />
+                          IsReadOnly="True" SelectionChanged="dgPatients_SelectionChanged" />
             </Grid>
         </Border>
 
