@@ -21,7 +21,7 @@ namespace ARMDental.Models
         [Required]
         [MaxLength(50)]
         public string Specialization { get; set; } = null!;
-        [MaxLength(16)]
+        [MaxLength(18)]
         public string? Phone { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime EmploymentDate { get; set; }

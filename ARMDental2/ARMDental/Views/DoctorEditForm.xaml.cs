@@ -2,6 +2,9 @@ using System;
 using System.Windows;
 using ARMDental.Models;
 using System.Linq;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Windows.Controls;
 
 namespace ARMDental.Views
 {
@@ -119,6 +122,47 @@ namespace ARMDental.Views
         {
             DialogResult = false;
             Close();
+        }
+
+        private void txtPhone_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        {
+            e.Handled = !Regex.IsMatch(e.Text, "[0-9]");
+        }
+
+        private void txtPhone_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (sender is not TextBox textBox)
+                return;
+
+            string digits = new string(textBox.Text.Where(char.IsDigit).ToArray());
+
+            if (digits.StartsWith("8"))
+                digits = "7" + digits.Substring(1);
+
+            if (!digits.StartsWith("7"))
+                digits = "7" + digits;
+
+            if (digits.Length > 11)
+                digits = digits.Substring(0, 11);
+
+            string formatted = "+7";
+
+            if (digits.Length > 1)
+                formatted += " (" + digits.Substring(1, Math.Min(3, digits.Length - 1));
+
+            if (digits.Length >= 4)
+                formatted += ") " + digits.Substring(4, Math.Min(3, digits.Length - 4));
+
+            if (digits.Length >= 7)
+                formatted += "-" + digits.Substring(7, Math.Min(2, digits.Length - 7));
+
+            if (digits.Length >= 9)
+                formatted += "-" + digits.Substring(9, Math.Min(2, digits.Length - 9));
+
+            textBox.TextChanged -= txtPhone_TextChanged;
+            textBox.Text = formatted;
+            textBox.SelectionStart = textBox.Text.Length;
+            textBox.TextChanged += txtPhone_TextChanged;
         }
     }
 }

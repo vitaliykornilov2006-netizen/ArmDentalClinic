@@ -19,7 +19,7 @@ namespace ARMDental.Models
         public string? MiddleName { get; set; }
         [Required]
         public DateTime BirthDate { get; set; }
-        [MaxLength(16)]
+        [MaxLength(18)]
         public string? Phone { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
